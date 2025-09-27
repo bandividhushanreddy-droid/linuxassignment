@@ -1,0 +1,95 @@
+name: Run 60 Linux Commands
+
+on:
+  workflow_dispatch:   # Run manually from Actions tab
+
+jobs:
+  linux-job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Run 60 Linux commands
+        run: |
+          echo "=== Basic System Info ==="
+          pwd
+          whoami
+          uname -a
+          date
+          cal
+          uptime
+          df -h
+          free -m
+          lscpu
+          env
+
+          echo "=== File & Directory Commands ==="
+          ls
+          ls -l
+          ls -a
+          mkdir testdir
+          cd testdir && pwd && cd ..
+          touch file1.txt
+          echo "Hello GitHub Actions" > file1.txt
+          cat file1.txt
+          cp file1.txt file2.txt
+          mv file2.txt moved.txt
+          rm moved.txt
+          rmdir testdir || echo "Dir not empty"
+
+          echo "=== File Viewing & Editing ==="
+          head -n 3 file1.txt
+          tail -n 3 file1.txt
+          wc -l file1.txt
+          sort file1.txt || true
+          uniq file1.txt || true
+
+          echo "=== Searching Commands ==="
+          grep "Hello" file1.txt
+          find . -name "*.txt"
+          locate bash || true
+
+          echo "=== User & Permission Commands ==="
+          id
+          who
+          groups
+          chmod 644 file1.txt
+          ls -l file1.txt
+          chmod +x file1.txt
+          ls -l file1.txt
+
+          echo "=== Process Management ==="
+          ps
+          top -b -n 1 | head -n 10
+          jobs || true
+          sleep 2 & 
+          kill -9 $! || true
+
+          echo "=== Archiving & Compression ==="
+          tar -cvf files.tar file1.txt
+          tar -tvf files.tar
+          gzip files.tar
+          ls -l files.tar.gz
+          gunzip files.tar.gz
+          tar -xvf files.tar
+
+          echo "=== Networking Commands ==="
+          ping -c 2 8.8.8.8
+          curl -I https://www.google.com
+          wget -qO- https://example.com | head -n 5
+          ifconfig || ip addr
+
+          echo "=== Package Management (Ubuntu) ==="
+          sudo apt-get update -y
+          sudo apt-get install -y tree
+          tree . || true
+
+          echo "=== Misc Commands ==="
+          history | head -n 5
+          echo $PATH
+          basename /home/runner/work
+          dirname /home/runner/work
+          cut -d':' -f1 /etc/passwd | head -n 5
+          echo "Assignment Done ✅"
